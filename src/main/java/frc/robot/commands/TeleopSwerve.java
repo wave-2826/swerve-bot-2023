@@ -71,7 +71,7 @@ public class TeleopSwerve extends CommandBase {
     swerveSubsystem.drive(
         new Translation2d(xVelocity, yVelocity).times(Constants.Swerve.maxSpeed),
         rotationVal * Constants.Swerve.maxAngularVelocity,
-        !fieldRelativeSupplier.getAsBoolean(),
+        fieldRelativeSupplier.getAsBoolean(),
         false);
   }
 }

@@ -65,12 +65,9 @@ public class SwerveModule {
     // Custom optimize command, since default WPILib optimize assumes continuous controller which
     // REV and CTRE are not
     desiredState = OnboardModuleState.optimize(desiredState, getState().angle);
-    desiredState.speedMetersPerSecond = Constants.Swerve.maxSpeed * 0.05;
 
+    setAngle(desiredState);
     setSpeed(desiredState, isOpenLoop);
-
-    // setAngle(desiredState);
-    // setSpeed(desiredState, isOpenLoop);
   }
 
   private void resetToAbsolute() {
