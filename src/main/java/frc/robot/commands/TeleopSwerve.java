@@ -5,9 +5,12 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.Swerve;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TeleopSwerve extends CommandBase {
   private Swerve swerveSubsystem;
@@ -62,10 +65,25 @@ public class TeleopSwerve extends CommandBase {
 
   @Override
   public void execute() {
+
+    
+    //read values periodically
+    double x = LimelightHelpers.getTX("limelight");
+    double y = LimelightHelpers.getTY("limelight");
+    double area = LimelightHelpers.getTA("limelight");
+    
+    //post to smart dashboard periodically
+    SmartDashboard.putNumber("LimelightX", x);
+    SmartDashboard.putNumber("LimelightY", y);
+    SmartDashboard.putNumber("LimelightArea", area);
+
+
     /* Get Values, Deadband */
     double xVelocity = xVelocityLimiter.calculate(MathUtil.applyDeadband(xVelocitySupplier.getAsDouble(), Constants.Swerve.stickDeadband));
     double yVelocity = yVelocityLimiter.calculate(MathUtil.applyDeadband(yVelocitySupplier.getAsDouble(), Constants.Swerve.stickDeadband));
     double rotationVal = rotationLimiter.calculate(MathUtil.applyDeadband(rotationSupplier.getAsDouble(), Constants.Swerve.stickDeadband));
+
+    rotationVal -= x / 2000;
 
     /* Drive */
     swerveSubsystem.drive(

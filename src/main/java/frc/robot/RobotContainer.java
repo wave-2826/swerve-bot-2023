@@ -29,9 +29,9 @@ public class RobotContainer {
   private final XboxController operator = new XboxController(1);
 
   /* Drive Controls */
-  private final int translationAxis = XboxController.Axis.kLeftY.value;
-  private final int strafeAxis = XboxController.Axis.kLeftX.value;
-  private final int rotationAxis = XboxController.Axis.kRightX.value;
+  private static final int translationAxis = XboxController.Axis.kLeftY.value;
+  private static final int strafeAxis = XboxController.Axis.kLeftX.value;
+  private static final int rotationAxis = XboxController.Axis.kRightX.value;
 
   /* Driver Buttons */
   private final JoystickButton zeroGyro =
@@ -40,13 +40,13 @@ public class RobotContainer {
       new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
   /* Subsystems */
-  private final Swerve s_Swerve = new Swerve();
+  private final Swerve swerveSubsystem = new Swerve();
 
   /** The container for the robot. Contains subsystems, IO devices, and commands. */
   public RobotContainer() {
-    s_Swerve.setDefaultCommand(
+    swerveSubsystem.setDefaultCommand(
         new TeleopSwerve(
-            s_Swerve,
+            swerveSubsystem,
             () -> -driver.getRawAxis(translationAxis),
             () -> -driver.getRawAxis(strafeAxis),
             () -> -driver.getRawAxis(rotationAxis),
@@ -64,8 +64,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     /* Driver Buttons */
-    // zeroGyro.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()));
-    zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+    zeroGyro.onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
   }
 
   /**
@@ -75,6 +74,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return new exampleAuto(s_Swerve);
+    return new exampleAuto(swerveSubsystem);
   }
 }
