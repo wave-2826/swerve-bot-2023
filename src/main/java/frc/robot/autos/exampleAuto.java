@@ -11,6 +11,7 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
 import java.util.List;
@@ -28,10 +29,12 @@ public class exampleAuto extends SequentialCommandGroup {
         TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
             new Pose2d(0, 0, new Rotation2d(0)),
-            // Pass through these two interior waypoints, making an 's' curve path
-            List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+            // // Pass through these two interior waypoints, making an 's' curve path
+            // List.of(new Translation2d(1/2, 1/2), new Translation2d(2/2, -1/2)),
+            List.of(),
             // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(3, 0, new Rotation2d(0)),
+            // new Pose2d(3/2, 0, new Rotation2d(0)),
+            new Pose2d(1, 0, new Rotation2d(0)),
             config);
 
     var thetaController =
@@ -54,7 +57,10 @@ public class exampleAuto extends SequentialCommandGroup {
             s_Swerve);
 
     addCommands(
+        new WaitCommand(2),
         new InstantCommand(() -> s_Swerve.resetOdometry(exampleTrajectory.getInitialPose())),
-        swerveControllerCommand);
+        swerveControllerCommand,
+        new InstantCommand(() -> s_Swerve.resetOdometry(exampleTrajectory.getInitialPose()))
+    );
   }
 }
